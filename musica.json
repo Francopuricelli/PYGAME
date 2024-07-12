@@ -1,0 +1,34 @@
+{
+    "music" : {
+        "menu_music" : "src//sonido//Streets of rage.mp3",
+        "main_music" : "src//sonido//musica_juego.mp3"
+    },
+    "images" : { 
+        "quieto": "src/imagenes/pjactualizado.png",
+        "quieto2" : "src/imagenes/pj2actualizado.png",
+        "quieto3" : "src/imagenes/pj3actualizado.png",
+        "quieto4" : "src/imagenes/pj4actualizado.png",
+        "quieto5" : "src/imagenes/pj5actualizado.png",
+        "derecha" : "src/imagenes/RUNNING1actualizado.png",
+        "derecha1" : "src/imagenes/RUNNING2actualizado.png",
+        "derecha2" : "src/imagenes/RUNNING3actualizado.png",
+        "derecha3" : "src/imagenes/RUNNING4actualizado.png",
+        "derecha4" : "src/imagenes/RUNNING5actualizado.png",
+        "derecha5" : "src/imagenes/RUNNING5actualizado.png",
+        "izquierda" : "src/imagenes/runningizq_1.png",
+        "izquierda1" : "src/imagenes/runningizq_2.png",
+        "izquierda2" : "src/imagenes/runningizq_3.png",
+        "izquierda3" : "src/imagenes/runningizq_4.png",
+        "izquierda4" : "src/imagenes/runningizq_5.png",
+        "izquierda5" : "src/imagenes/runningizq_6.png",
+        "menu": "src/imagenes/menu.png",
+        "background_main" : "src/imagenes/backgroundcronichles1.png",
+        "disparo" : "src/imagenes/disparo.png",
+        "enemigo" : "src/imagenes/enemigo2.png",
+        "enemigo2": "src/imagenes/enemigo3.png",
+        "fireball": "src/imagenes/FIREBALL.png"
+    },
+    "font": {
+        "font_time" : "src/fuentes/Daydream.ttf"
+    }
+}
