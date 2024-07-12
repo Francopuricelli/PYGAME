@@ -5,17 +5,15 @@ from class_player import *
 from class_enemy import *
 from class_disparos import *
 from game_over import *
-from funciones_main import *
-import json
 from files import *
+
 def menu():
     global nick
     menu_ = pygame.image.load(files["images"]["menu"])
     menu_ = pygame.transform.scale(menu_,(WIDTH,HEIGTH))
-    pygame.mixer.music.load("src/sonido/Streets of rage.mp3")
+    pygame.mixer.music.load(files["music"]["menu_music"])
     pygame.mixer.music.play(-1,4)
     fuente = pygame.font.Font(None,36)
-    scroll = 0
     menu_running = True
     nick = "ID"
     print_nick = False
@@ -45,7 +43,6 @@ def menu():
         mouse_x, mouse_y = pygame.mouse.get_pos()
         boton_nombre = pygame.Rect((40,170),(140,50))
         boton_play = pygame.Rect((40,250),(140,50))
-        boton_ranking = pygame.Rect((40,350),(140,50))
         boton_quit = pygame.Rect((40,450),(140,50))
         
         if nick_ready == False:
@@ -53,14 +50,12 @@ def menu():
         else:
             pygame.draw.rect(SCREEN,NEGRO,boton_play)
 
-        pygame.draw.rect(SCREEN,NEGRO,boton_ranking)
         pygame.draw.rect(SCREEN,NEGRO,boton_quit)
 
         if nick_ready == False:
             texto_visible = fuente.render(nick,True,RED)
         SCREEN.blit(texto_visible,(100,180))
         draw_text("PLAY",fuente,RED,SCREEN,110,270)
-        draw_text("RANKING",fuente,RED,SCREEN,110,370)
         draw_text("QUIT",fuente,RED,SCREEN,110,470)
         
         if boton_nombre.collidepoint((mouse_x,mouse_y)):
@@ -71,9 +66,6 @@ def menu():
             if pygame.mouse.get_pressed()[0]:
                 menu_running = False
                 game(nick)
-        if boton_ranking.collidepoint((mouse_x,mouse_y)):
-            if pygame.mouse.get_pressed()[0]:
-                pass
         if boton_quit.collidepoint((mouse_x,mouse_y)):
             if pygame.mouse.get_pressed()[0]:
                 menu_running = False
@@ -97,7 +89,7 @@ def menu():
 
 def game(nick):
     is_running = True
-    fuente_time = pygame.font.Font("src/fuentes/Daydream.ttf",27)
+    fuente_time = pygame.font.Font(files["font"]["font_time"],27)
     #escudo = False
     escudo_contador = 0
     milisegundos = 0
@@ -105,7 +97,7 @@ def game(nick):
     tiempo_ultimo_enemigo = pygame.time.get_ticks()
     intervalo_enemigos = 5000
     #crear_enemigos_aleatorios(enemigos,3,5,WIDTH)
-    pygame.mixer.music.load("src/sonido/musica_juego.mp3")
+    pygame.mixer.music.load(files["music"]["main_music"])
     pygame.mixer_music.play(-1,2)
     pygame.mixer_music.set_volume(0.5)
     segundos = 0
@@ -113,6 +105,8 @@ def game(nick):
     score = 0
     player.rect.x = 400
     player.rect.y = 500
+    player.vidas = 3
+
     for enemigo in enemigos:
         enemigo.rect.x = 1500
         enemigo.rect.y = 500 
@@ -120,7 +114,7 @@ def game(nick):
 
     if not colisiono:
         if is_running:
-            pygame.mixer.music.load("src/sonido/musica_juego.mp3")
+            pygame.mixer.music.load(files["music"]["main_music"])
             pygame.mixer.music.play(-1, 2)
         while is_running: #esto corre el juego
             clock.tick(FPS)
@@ -129,7 +123,9 @@ def game(nick):
                     is_running = False #para quitear del juego
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
-                        player.disparo()
+                        player.disparo_derecha()
+                    elif event.key == pygame.K_q:
+                        player.disparo_izquierda()
                     elif event.key == pygame.K_ESCAPE:
                         wait_user(K_ESCAPE)
 
@@ -138,9 +134,6 @@ def game(nick):
             if milisegundos == 17:
                 segundos += 1
                 milisegundos = 0
-            if segundos == 60:
-                minutos += 1
-                segundos = 0
             
             escudo_contador += 1
 
@@ -185,11 +178,11 @@ def game(nick):
 
 
                     if player.vidas == 0:
-                        player.kill()
                         is_running = False
                         colisiono = True
-                        game_over(segundos,minutos,score,nick)
+                        game_over(segundos,score,nick)
                         menu()
+
             else:
                 if escudo_contador >= 90:
                     player.escudo = False

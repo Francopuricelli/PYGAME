@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 
+import random
 #from class_enemy import *
 WIDTH = 1665
 HEIGTH = 600
@@ -19,6 +20,7 @@ x = 0
 y = 0
 FPS = 30
 
+background = pygame.image.load("src/imagenes/backgroundcronichles1.png")
 velocidad = 5
 salto = False
 izquierda = False
@@ -34,37 +36,11 @@ indice_corre = 0
 contador_index = 0
 tick = 0
 
-izquierda = False
-derecha = True
-barra_flotante_speed = 10
-barra_flotante = pygame.Rect(800,380,300,10)
 
 def get_path_actual(nombre_archivo):
     import os
     directorio_actual = os.path.dirname(__file__)
     return os.path.join(directorio_actual, nombre_archivo)
-
-
-def barra_flotante_mover(player):
-    global izquierda, derecha, barra_flotante, barra_flotante_speed
-    
-    if derecha:
-        barra_flotante.x += barra_flotante_speed
-        if barra_flotante.right >= WIDTH:
-            derecha = False
-            izquierda = True
-    elif izquierda:
-        barra_flotante.x -= barra_flotante_speed
-        if barra_flotante.left <= 0:
-            izquierda = False
-            derecha = True
-
-    if player.rect.colliderect(barra_flotante):
-        if player.rect.bottom >= barra_flotante.top and player.rect.bottom <= barra_flotante.bottom:
-            player.rect.bottom = barra_flotante.top
-            player.rect.y = 0
-    pygame.draw.rect(SCREEN, (218, 165, 32), barra_flotante, 0, 5)
-
 
 def draw_text(text, font, color, surface,x, y):
     textobj = font.render(text, 1, color)
@@ -83,8 +59,6 @@ def swap_lista(lista:list,i:int,j:int):
     aux = lista[i]
     lista[i] = lista[j]
     lista [j] = aux
-
-
 
 def ordenar_lista_doble(lista, campo1, campo2):
     """ordena lista con doble parametro
@@ -111,7 +85,6 @@ def ordenar_lista_doble(lista, campo1, campo2):
         raise ValueError("No se ingreso ninguna lista")
     
 
-
 def wait_user(tecla):
     continuar = True
     while continuar:
@@ -120,9 +93,7 @@ def wait_user(tecla):
                 if evento.key == tecla:
                     continuar = False
 
-
-
-def mostrar_rankings(nombre_archivo,nick,time):
+def cargar_rankings(nombre_archivo,nick,time):
     """ Carga un archivo .CSV
 
     Args:
@@ -132,33 +103,62 @@ def mostrar_rankings(nombre_archivo,nick,time):
     Returns:
         _type_: me retorna el contenido del archivo en una lista.
     """
-    fuente = pygame.font.Font(None,26)
     lista = []
     lista.append({"nick" : nick, "time" : time})
     with open(get_path_actual(nombre_archivo + ".csv"), "r", encoding="utf-8") as archivo :
         encabezado = archivo.readline().strip("\n").split(",")
 
         for linea in archivo.readlines():
-            standing= {}
+            standing = {}
             linea = linea.strip("\n").split(",")
 
             nick,time = linea
+            
+
             standing["nick"] = nick
             standing["time"] = int(time)
 
             lista.append(standing)
-
-
-
-        draw_text(f"ID             TIEMPO", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 2,HEIGTH -HEIGTH // 2 - 170)
-        draw_text(f"               1.{lista[0]["name"]}         {lista[0]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 - 130)
-        draw_text(f"               2.{lista[1]["name"]}         {lista[1]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 - 100)
-        draw_text(f"               3.{lista[2]["name"]}         {lista[2]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 - 70)
-        draw_text(f"               4.{lista[3]["name"]}         {lista[3]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 - 40)
-        draw_text(f"               5.{lista[4]["name"]}         {lista[4]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 - 10)
-        draw_text(f"               6.{lista[5]["name"]}         {lista[5]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 + 20)
-        draw_text(f"               7.{lista[6]["name"]}         {lista[6]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 + 50)
-        draw_text(f"               8.{lista[7]["name"]}         {lista[7]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 + 80)
-        draw_text(f"               9.{lista[8]["name"]}         {lista[8]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 + 110)
-        draw_text(f"              10.{lista[9]["name"]}        {lista[9]["second"]:2}", fuente, BLANCO, SCREEN, WIDTH - WIDTH // 1.7,HEIGTH -HEIGTH // 2 + 140)
     return lista
+
+def rankings(lista:list):
+    """crea un archivo de tipo .CSV filtrando por tipo.
+
+    Args:
+        lista (list): _description_
+    """
+
+    ordenar_lista_doble(lista,"time","time")
+    
+    with open(get_path_actual("records" + ".csv"), "w", encoding="utf-8") as archivo:
+        encabezado = ",".join(list(lista[0].keys())) + "\n"
+        archivo.write(encabezado)
+        for i in range(len(lista)):
+            lista_cargada = ",".join(lista[i]) + "\n"
+
+        for persona in lista:
+            values = list(persona.values())
+            lista_cargada = []
+            for value in values:
+                if isinstance(value,int):
+                    lista_cargada.append(str(value))
+                elif isinstance(value,float):
+                    lista_cargada.append(str(value))
+                else:
+                    lista_cargada.append(value)
+            linea = ",".join(lista_cargada) + "\n"
+            archivo.write(linea)
+
+def recargapantalla():
+    global cuentaPasos
+    global x
+    
+
+
+    x_relativa = x % background.get_rect().width #obtengo el ancho del background y lo divido por x
+    #x_relativa - background.get_rect().width hace que se reproduzca el fondo en bucle
+    SCREEN.blit(background,(x_relativa - background.get_rect().width ,y)) #el (0,0) representa la x y la y
+    if x_relativa < WIDTH:
+        SCREEN.blit(background,(x_relativa,y))
+    x -= 2
+
