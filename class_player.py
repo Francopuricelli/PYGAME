@@ -125,33 +125,8 @@ class Jugador(pygame.sprite.Sprite):
             bala = Disparos(self.rect.centerx, self.rect.centery, -15)  # Disparo hacia la izquierda
             disparos.add(bala)
             self.ultimo_lanzamiento = tiempo_actual
-    def Powerup(self):
-        powerup = Fireball()
-        power_up.add(powerup)
+    
 
-class Fireball(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load("src/imagenes/FIREBALL.png")
-        self.image.set_colorkey(BLANCO)
-        self.rect = self.image.get_rect()
-        self.rect.x = 1000
-        self.rect.y = 500
-        self.speed = 0
-
-    def update(self):
-        self.colision_player_powerup = pygame.sprite.spritecollide(player, power_up, False)
-        if self.colision_player_powerup:
-            player.speed = 50
-            
-        player.rect.x += player.speed
-
-
-
-
-power_up = pygame.sprite.Group()
-powerup = Fireball()
-power_up.add(powerup)
 
 sprites = pygame.sprite.Group()  # Jugador
 player = Jugador()

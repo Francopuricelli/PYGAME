@@ -8,7 +8,7 @@ from game_over import *
 from files import *
 
 def menu():
-    global nick
+    
     menu_ = pygame.image.load(files["images"]["menu"])
     menu_ = pygame.transform.scale(menu_,(WIDTH,HEIGTH))
     pygame.mixer.music.load(files["music"]["menu_music"])
@@ -37,7 +37,7 @@ def menu():
                     elif event.key == pygame.K_BACKSPACE:
                         nick = nick[:-1] 
                     else:
-                        nick += event.unicode #escribe cada caracter
+                        nick += event.unicode 
 
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -199,10 +199,10 @@ def game(nick):
 
 
 
-pygame.init() #INICIALIZA
+pygame.init() 
 
 
-pygame.display.set_caption("Shadows Of Evil") #cambia el nombre de la ventana
+pygame.display.set_caption("Shadows Of Evil") 
 icono = pygame.image.load("src/imagenes/pj.png")
 pygame.display.set_icon(icono)
 
@@ -210,6 +210,6 @@ pygame.display.set_icon(icono)
 menu()
 
 
-pygame.quit()#DESCONECTA
+pygame.quit()
 
 

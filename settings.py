@@ -86,6 +86,11 @@ def ordenar_lista_doble(lista, campo1, campo2):
     
 
 def wait_user(tecla):
+    """
+
+    Args:
+        tecla (_type_): _description_
+    """
     continuar = True
     while continuar:
         for evento in pygame.event.get():

@@ -8,7 +8,7 @@ def game_over(segundos,score,nick):
     font_score =  pygame.font.Font(files["font"]["font_time"],36)
     while game_over_is_running:
         SCREEN.fill(NEGRO)
-        draw_text(f" Segundos: {segundos} ",font,BLANCO,SCREEN,832,300)
+        draw_text(f" Segundos: {segundos} ",font_score,BLANCO,SCREEN,832,300)
         draw_text(f" Nick: {nick}      Score: {score}",font_score,BLANCO,SCREEN,832,200)
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT: 
